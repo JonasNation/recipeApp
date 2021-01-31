@@ -17,7 +17,7 @@ public class ConnectionHelper {
         port = "1433";
         database = "recipeDB";
         username = "jonasNation@recipeserver";
-        password = "Liamadrianmorgan81";
+        password = "****************";
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
