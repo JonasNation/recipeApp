@@ -49,40 +49,42 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.actionbar, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
+    // because I am running the query process in the background I had to tell the main UI to excute the AsyncTask by creating
+    // a new task object or instance then executing that instance from the main UI thread
     public void getRecordFromSQL(View view) {
       SQLInsertTask sqlInsertTask = new SQLInsertTask();
       sqlInsertTask.execute();
     }
-
+    // this is for the action bar menu item to navigate to the second screen
     public void onOptionGetRecipe(MenuItem item) {
         startActivity(new Intent(this, MainActivity2.class));
     }
 
-    @SuppressLint("StaticFieldLeak")
-    private class SQLInsertTask extends AsyncTask<String, String, String> {
+    @SuppressLint("StaticFieldLeak") 
+    private class SQLInsertTask extends AsyncTask<String, String, String> { 
 
         SQLInsertTask() {}
 
         @Override
         protected String doInBackground(String... strings) {
-            try {
+            try { // connects to the connection helper java file
                 ConnectionHelper connectionHelper = new ConnectionHelper();
                 connect = connectionHelper.connectionclass();
                 if (connect != null) {
                     String query = "insert into dbo.recipe_table (preparation_time,cooking_time,nutrition_per_serving,ingredients,methods,created_by)" +
                             " values ('"+prep.getText().toString()+"','"+cook.getText().toString()+"','"+serving.getText().toString()+"','"+ingred.getText().toString()+"','"+method.getText().toString()+"','"+create.getText().toString()+"')";
-                    Statement st = connect.createStatement();
-                    ResultSet rs = st.executeQuery(query);
+                    Statement st = connect.createStatement(); // will need to create a catch for the createStatement() method which will include a catch for
+                    ResultSet rs = st.executeQuery(query);   // the executeQuery() method as well
                 }
                 publishProgress();
+                // SQLException are important a simple Exception did not work for me
             }catch (SQLException | java.sql.SQLException sqlException) {
                 Log.e("SQL Error 1: ", sqlException.getMessage());
             }
 
             return "Recipe insert complete";
         }
-
+        // These three just provides information not really needed but helps see the begin of the doInBackground for the main UI thread
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
